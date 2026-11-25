@@ -1,6 +1,6 @@
 // Offline cache for the CA Foundation checklist.
 // Bump the version whenever cached app files change.
-const CACHE = "ca-checklist-v7";
+const CACHE = "ca-checklist-v8";
 const SHELL = [
   "./",
   "index.html",
@@ -45,13 +45,21 @@ const DATE_STRIP_STYLE = `<style>
 </style>`;
 
 const BRIDGE_STYLE = `<style>
-.event-bridge { z-index: 2 !important; }
+.event { grid-template-columns: 84px minmax(0, 1fr) 30px !important; }
+.event-rail { width: 84px; }
+.event-symbol { font-size: clamp(23px, calc(var(--icon-size, 25px) * .68), 34px) !important; }
+.event-bridge { z-index: 2 !important; width: 5px !important; border-radius: 0 !important; }
 .event-bridge.gap::before, .event-bridge.gap::after {
   content: ""; position: absolute; left: 0; width: 100%; height: 5px;
   border-radius: 5px; background: var(--accent);
 }
 .event-bridge.gap::before { top: 0; }
 .event-bridge.gap::after { bottom: 0; }
+@media (max-width: 480px) {
+  .event { grid-template-columns: 72px minmax(0, 1fr) 30px !important; }
+  .event-rail { width: 72px; }
+  .event-bridge { width: 5px !important; }
+}
 </style>`;
 
 const DATE_STRIP_SCRIPT = `<script>
@@ -112,7 +120,7 @@ const BRIDGE_SCRIPT = `<script>
   }
 
   function connectEventRails() {
-    var previousBridges = Array.from(events.querySelectorAll(".event-bridge"));
+    var previousBridges = Array.from(events.querySelectorAll(":scope > .event-bridge"));
     var wasGap = previousBridges.map(function (bridge) { return bridge.classList.contains("gap"); });
     previousBridges.forEach(function (bridge) { bridge.remove(); });
 
@@ -132,11 +140,10 @@ const BRIDGE_SCRIPT = `<script>
       var end = lowerRect.top;
       var top, height;
 
-      // Overlap the endpoints slightly so the bridge visibly meets both rails.
-      // When the rails touch or overlap, use a short connector across their seam.
+      // Extend the connector under each rail edge so there is no visible seam.
       if (end > start) {
-        top = start - eventsRect.top - 2;
-        height = end - start + 4;
+        top = start - eventsRect.top - 3;
+        height = end - start + 6;
       } else {
         top = (start + end) / 2 - eventsRect.top - 3;
         height = 6;
