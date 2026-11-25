@@ -2,43 +2,66 @@
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#1A2029">
+<link rel="manifest" href="manifest.webmanifest">
 <title>Settings | CA Foundation</title>
 </head><body>
+<!-- Top bar (Home, profile chip, "+ Profile") is drawn by js/core.js -->
 <div id="cat-topbar"></div>
+
 <main class="wrap">
   <h1>Settings</h1>
-  <p class="sub">Your profile, app usage and device details.</p>
-  <h2>Profile</h2><div class="panel" id="profile-card"></div>
-  <h2>Usage</h2><div class="panel" id="usage-card"></div>
-  <h2>About</h2><div class="panel" id="about-card"></div>
+  <p class="sub">Profiles and usage are saved on this device only.</p>
+
+  <h2>Profile</h2>
+  <div class="panel">
+    <div class="kv">
+      <span class="k">Username</span>
+      <span class="v"><span id="s-username">–</span><button class="btn small ghost" id="s-rename" type="button">Change</button></span>
+    </div>
+    <div class="kv"><span class="k">Profiles on this device</span><span class="v" id="s-count">–</span></div>
+  </div>
+
+  <h2>Usage</h2>
+  <div class="panel">
+    <div class="kv"><span class="k">Time spent in the app</span><span class="v" id="s-usage">–</span></div>
+    <div class="kv"><span class="k">Using since</span><span class="v" id="s-since">–</span></div>
+  </div>
+
+  <h2>About</h2>
+  <div class="panel">
+    <div class="kv"><span class="k">App</span><span class="v" id="s-app">–</span></div>
+    <div class="kv"><span class="k">Version</span><span class="v" id="s-version">–</span></div>
+    <div class="kv"><span class="k">Device</span><span class="v" id="s-device">–</span></div>
+    <div class="kv"><span class="k">Browser</span><span class="v" id="s-browser">–</span></div>
+  </div>
+  <p class="sub" style="margin-top:10px;font-size:12.5px">Browsers don't reveal a device's custom name, so the model and system are shown instead.</p>
 </main>
 
 <script src="js/core.js"></script>
 <script>
 (function () {
-  var el = CAT.el;
-  function row(key, value, extra) {
-    var v = el("span", { class: "v" }, [el("span", { text: value })]);
-    if (extra) v.append(extra);
-    return el("div", { class: "kv" }, [el("span", { class: "k", text: key }), v]);
+  function $(id) { return document.getElementById(id); }
+
+  var dev = CAT.deviceInfo();
+  $("s-app").textContent = CAT.app.name;
+  $("s-version").textContent = CAT.app.version;
+  $("s-device").textContent = dev.name;
+  $("s-browser").textContent = dev.browser;
+  $("s-rename").addEventListener("click", CAT.renameActive);
+
+  function render() {
+    var p = CAT.profiles.active();
+    $("s-username").textContent = p ? p.name : "–";
+    $("s-count").textContent = CAT.profiles.all().length;
+    $("s-usage").textContent = p ? CAT.formatDuration(p.usageSec) : "–";
+    var since = p ? p.created : CAT.firstOpen();
+    $("s-since").textContent = since
+      ? new Date(since).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" })
+      : "–";
   }
-  function render(p) {
-    var pc = document.getElementById("profile-card"), uc = document.getElementById("usage-card"), ac = document.getElementById("about-card");
-    pc.replaceChildren(); uc.replaceChildren(); ac.replaceChildren();
-    if (!p) return;
-    pc.append(row("Username", p.name, el("button", { class: "btn ghost small", text: "Edit", onclick: CAT.renameActive })));
-    pc.append(row("Profiles on this device", String(CAT.profiles.all().length), el("button", { class: "btn ghost small", text: "Add", onclick: CAT.addProfile })));
-    uc.append(row("Time in app", CAT.formatDuration(p.usageSec)));
-    uc.append(row("Using since", new Date(p.created).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" })));
-    uc.append(row("Days using the app", String(Math.max(1, Math.ceil((Date.now() - p.created) / 86400000)))));
-    var d = CAT.deviceInfo();
-    ac.append(row("App name", CAT.app.name));
-    ac.append(row("Version", CAT.app.version));
-    ac.append(row("Device", d.name));
-    ac.append(row("Browser", d.browser));
-  }
-  CAT.onChange(render);
-  setInterval(function () { render(CAT.profiles.active()); }, 10000);
+
+  CAT.onChange(render);          // refresh when profile is added / switched / renamed
+  setInterval(render, 5000);     // keep the usage time live
 })();
 </script>
 </body></html>
