@@ -1,10 +1,16 @@
 // Offline cache for the CA Foundation checklist.
 // All paths are relative, so this works from a GitHub Pages subfolder too.
-// If you ever change the files, bump the version in CACHE so phones pick up the new copy.
-const CACHE = "ca-checklist-v1";
+// Bump the version whenever the cached app files change.
+const CACHE = "ca-checklist-v2";
 const SHELL = [
   "./",
   "index.html",
+  "track.html",
+  "timeblocks.html",
+  "errorlogs.html",
+  "syllabus.html",
+  "questionbanks.html",
+  "settings.html",
   "manifest.webmanifest",
   "icon-192.png",
   "icon-512.png",
@@ -31,25 +37,25 @@ self.addEventListener("fetch", (event) => {
   if (req.method !== "GET") return;
   if (new URL(req.url).origin !== self.location.origin) return;
 
-  // Opening the app: show the saved copy straight away, refresh it in the background.
+  // Keep each page cached under its own URL. Never return one page's cached
+  // HTML for a different navigation: doing so made navigation lag by one click.
   if (req.mode === "navigate") {
     event.respondWith((async () => {
       const cache = await caches.open(CACHE);
-      const cached = await cache.match("index.html");
-      const refresh = fetch(req).then((res) => {
-        if (res && res.ok) cache.put("index.html", res.clone());
+      try {
+        const res = await fetch(req);
+        if (res && res.ok) await cache.put(req, res.clone());
         return res;
-      });
-      if (cached) {
-        event.waitUntil(refresh.catch(() => {}));
-        return cached;
+      } catch (error) {
+        const cached = await cache.match(req);
+        if (cached) return cached;
+        throw error;
       }
-      return refresh;
     })());
     return;
   }
 
-  // Everything else (icons, manifest): saved copy first, network as backup.
+  // Everything else (icons, manifest, etc.): saved copy first, network as backup.
   event.respondWith(
     caches.match(req).then((hit) => {
       if (hit) return hit;
