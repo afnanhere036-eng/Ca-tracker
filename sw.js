@@ -1,6 +1,6 @@
 // Offline cache for the CA Foundation checklist.
 // Bump the version whenever cached app files change.
-const CACHE = "ca-checklist-v15";
+const CACHE = "ca-checklist-v16";
 const SHELL = [
   "./",
   "index.html",
