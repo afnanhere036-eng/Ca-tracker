@@ -1,6 +1,6 @@
 // Offline cache for the CA Foundation checklist.
 // Bump the version whenever cached app files change.
-const CACHE = "ca-checklist-v9";
+const CACHE = "ca-checklist-v10";
 const SHELL = [
   "./",
   "index.html",
@@ -32,7 +32,7 @@ input, textarea, select, [contenteditable="true"], [contenteditable=""] {
 </style>`;
 
 const DATE_STRIP_STYLE = `<style>
-#date-strip { touch-action: pan-y; }
+#date-strip { touch-action: pan-x pan-y; }
 #date-strip.swipe-next .date-button { animation: date-strip-next .22s ease-out both; }
 #date-strip.swipe-previous .date-button { animation: date-strip-previous .22s ease-out both; }
 @keyframes date-strip-next { from { opacity: .45; transform: translateX(18px); } to { opacity: 1; transform: translateX(0); } }
