@@ -1,94 +1,82 @@
-/* Renders the Question Banks page from window.CA_PAPERS (data/papers.js). */
+/* Question Banks page: paper list -> banks for that paper.
+ * Data comes from window.CA_PAPERS (data/papers.js). Needs js/core.js loaded first. */
 (function () {
   "use strict";
 
+  var el = CAT.el;
   var root = document.getElementById("qb-root");
   var papers = window.CA_PAPERS || [];
-  var exists = {}; // file -> true/false/undefined
+  var exists = {}; // file -> true/false
 
-  function el(tag, cls, text) {
-    var e = document.createElement(tag);
-    if (cls) e.className = cls;
-    if (text != null) e.textContent = text;
-    return e;
-  }
-
-  // Checks whether the PDF has been uploaded yet.
+  // Is the PDF uploaded yet?
   function check(file) {
     if (file in exists) return Promise.resolve(exists[file]);
     return fetch(file, { method: "HEAD", cache: "no-cache" })
       .then(function (r) {
-        // Some hosts answer 200 with an HTML 404 page; make sure it is not HTML.
         var type = r.headers.get("content-type") || "";
-        exists[file] = r.ok && type.indexOf("text/html") === -1;
+        exists[file] = r.ok && type.indexOf("text/html") === -1; // ignore HTML 404 pages
         return exists[file];
       })
       .catch(function () { exists[file] = false; return false; });
   }
 
-  function renderBank(bank) {
-    var row = el("div", "bank");
-    var info = el("div", "bank-info");
-    info.appendChild(el("div", "bank-title", bank.title));
-    if (bank.note) info.appendChild(el("div", "bank-note", bank.note));
-    var action = el("span", "pill pill-wait", "Checking…");
-    row.appendChild(info);
-    row.appendChild(action);
+  function bankRow(bank) {
+    var info = el("div", { class: "grow" }, [el("div", { class: "title", text: bank.title })]);
+    if (bank.note) info.append(el("div", { class: "meta", text: bank.note }));
+    var row = el("div", { class: "row" }, [info, el("span", { class: "badge", text: "Checking…" })]);
 
     check(bank.file).then(function (ok) {
-      var next;
+      var badge = el("span", { class: "badge", text: ok ? "Open" : "Not uploaded yet" });
       if (ok) {
-        next = el("a", "pill pill-open", "Open");
-        next.href = bank.file;
-        next.target = "_blank";
-        next.rel = "noopener";
+        var link = el("a", { class: "row", href: bank.file, target: "_blank", rel: "noopener" }, [info, badge]);
+        row.replaceWith(link);
       } else {
-        next = el("span", "pill pill-none", "Not uploaded yet");
-        next.title = "Upload as: " + bank.file;
+        row.title = "Upload as: " + bank.file;
+        row.replaceChildren(info, badge);
       }
-      row.replaceChild(next, action);
     });
     return row;
   }
 
-  function renderPaper(paper, open) {
-    var card = el("section", "paper");
-    var head = el("button", "paper-head");
-    head.type = "button";
-    head.setAttribute("aria-expanded", open ? "true" : "false");
-
-    var left = el("div", "paper-left");
-    left.appendChild(el("div", "paper-code", paper.code + (paper.type ? " · " + paper.type : "")));
-    left.appendChild(el("div", "paper-name", paper.name));
-    var chev = el("span", "chev", "›");
-    head.appendChild(left);
-    head.appendChild(chev);
-
-    var body = el("div", "paper-body");
-    body.hidden = !open;
-    (paper.banks || []).forEach(function (b) { body.appendChild(renderBank(b)); });
-
-    head.addEventListener("click", function () {
-      var isOpen = head.getAttribute("aria-expanded") === "true";
-      head.setAttribute("aria-expanded", isOpen ? "false" : "true");
-      body.hidden = isOpen;
-    });
-
-    card.appendChild(head);
-    card.appendChild(body);
-    return card;
+  function showPaper(paper) {
+    var crumbs = el("div", { class: "crumbs" }, [
+      el("a", { href: "#", text: "Question Banks", onclick: function (e) { e.preventDefault(); showList(); } }),
+      el("span", { text: "›" }),
+      el("span", { text: paper.code })
+    ]);
+    var banks = paper.banks || [];
+    root.replaceChildren(
+      crumbs,
+      el("h1", { text: paper.name }),
+      el("p", { class: "sub", text: paper.type ? paper.type + " paper" : "" }),
+      banks.length
+        ? el("div", { class: "list" }, banks.map(bankRow))
+        : el("div", { class: "empty", text: "No banks listed for this paper yet." })
+    );
+    window.scrollTo(0, 0);
   }
 
-  function render() {
-    root.textContent = "";
-    var intro = el("p", "intro", "Practice material for each paper. Tap a paper to see what is available.");
-    root.appendChild(intro);
-    if (!papers.length) {
-      root.appendChild(el("p", "empty", "No papers found. Check data/papers.js."));
-      return;
-    }
-    papers.forEach(function (p, i) { root.appendChild(renderPaper(p, i === 0)); });
+  function paperRow(paper) {
+    var count = (paper.banks || []).length;
+    return el("button", { class: "row", onclick: function () { showPaper(paper); } }, [
+      el("div", { class: "grow" }, [
+        el("div", { class: "title", text: paper.code + " · " + paper.name }),
+        el("div", { class: "meta", text: (paper.type || "") + (paper.type ? " · " : "") + count + (count === 1 ? " bank" : " banks") })
+      ]),
+      el("span", { class: "badge", text: "›" })
+    ]);
   }
 
-  render();
+  function showList() {
+    root.replaceChildren(
+      el("h1", { text: "Question Banks" }),
+      el("p", { class: "sub", text: "Pick a paper to see its question banks." }),
+      papers.length
+        ? el("div", { class: "list" }, papers.map(paperRow))
+        : el("div", { class: "empty" }, [document.createTextNode("No papers found. Check "), el("code", { text: "data/papers.js" })])
+    );
+    window.scrollTo(0, 0);
+  }
+
+  showList();
 })();
