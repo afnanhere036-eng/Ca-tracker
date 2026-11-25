@@ -12,8 +12,8 @@
 .date-strip{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;padding:14px 0 11px}.date-button{min-width:0;border:0;background:transparent;color:var(--muted);padding:4px 1px 6px;border-radius:14px;text-align:center;cursor:pointer}.date-button .weekday{display:block;font-size:12px}.date-button .day-number{display:grid;place-items:center;width:min(42px,calc((100vw - 44px)/7));max-width:42px;aspect-ratio:1;margin:6px auto 4px;color:var(--ink);font-size:19px;font-weight:650;border-radius:50%}.date-button.selected .day-number{background:var(--accent);color:white}.date-button .dots{height:8px;display:flex;justify-content:center;gap:3px}.date-button .dots i{width:7px;height:7px;border-radius:50%}.date-button:focus-visible{outline:2px solid var(--accent)}
 .day-title{padding:0 18px 13px;color:var(--muted);font-size:14px}.timeline-scroll{height:calc(100dvh - 220px);min-height:360px;overflow:auto;overscroll-behavior:contain;background:var(--surface2);border-radius:34px 34px 0 0;scrollbar-width:thin;scrollbar-color:#626269 transparent}.timeline{position:relative;min-height:240px;background:repeating-linear-gradient(to bottom,transparent 0,transparent 71px,#ffffff08 71px,#ffffff08 72px)}.hour-line{position:absolute;left:0;right:0;height:1px;border-top:1px solid #ffffff12}.hour-line span{position:absolute;left:0;top:-11px;width:62px;padding:0 0 0 12px;background:var(--surface2);color:#aaa7b1;font-size:12px;font-variant-numeric:tabular-nums}.hour-line::after{content:"";position:absolute;left:62px;right:0;top:0;border-top:1px solid #ffffff0b}
 .events{position:absolute;inset:0 0 0 68px}
-.event-bridge{position:absolute;z-index:0;left:46px;width:6px;border-radius:5px;background:var(--accent);transform:translateX(-50%);pointer-events:none}
-.event-bridge.gap{background:repeating-linear-gradient(to bottom,var(--accent) 0 12px,transparent 12px 21px)}
+.event-bridge{position:absolute;z-index:0;left:46px;width:3px;border-radius:2px;background:var(--bridge,var(--accent));transform:translateX(-50%);pointer-events:none}
+.event-bridge.gap{background:repeating-linear-gradient(to bottom,var(--bridge,var(--accent)) 0 5px,transparent 5px 10px)}
 .event{position:absolute;left:7px;right:12px;display:grid;grid-template-columns:78px minmax(0,1fr) 30px;align-items:center;gap:13px;z-index:1}.event-rail{align-self:stretch;min-height:54px;border-radius:42px;background:var(--block-bg);color:white;display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 3px 14px #0002}.event-rail::after{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(180deg,#ffffff22,transparent 72%)}.event-symbol{z-index:1;font-size:var(--icon-size,25px);line-height:1}.event-copy{min-width:0}.event-time{font-size:clamp(12px,3.8vw,16px);color:#c1bec8;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.event-name{font-size:clamp(17px,5vw,25px);font-weight:680;line-height:1.2;overflow-wrap:anywhere}
 .event-check{width:26px;height:26px;min-width:26px;border:2px solid var(--block-border);border-radius:50%;background:transparent;padding:0;color:#fff;font-size:14px;display:grid;place-items:center;cursor:pointer;flex:0 0 26px;margin-left:auto}
 .event.done .event-rail{filter:saturate(.6);opacity:.72}.event.done .event-name{text-decoration:line-through;color:#c5c1ca}.event.done .event-check{background:var(--block-border);color:#202023;border-color:var(--block-border)}.empty{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:24px;color:#c1bec8}.add-button{position:fixed;right:max(22px,env(safe-area-inset-right));bottom:max(24px,env(safe-area-inset-bottom));z-index:5;width:68px;height:68px;border:0;border-radius:50%;background:var(--accent);color:white;box-shadow:0 8px 24px #0007;font-size:39px;line-height:1;display:grid;place-items:center;text-decoration:none}.add-button:focus-visible{outline:3px solid white;outline-offset:3px}
@@ -81,8 +81,9 @@
         if(gap>=0){
           var bridge=document.createElement("div");
           bridge.className="event-bridge"+(gap>0?" gap":"");
-          bridge.style.top=(gap>0?(end-top)*scale+16-1:(end-top)*scale+12)+"px";
-          bridge.style.height=(gap>0?Math.max(1,gap*scale):8)+"px";
+          bridge.style.setProperty("--bridge",c.dot);
+          bridge.style.top=(gap>0?(end-top)*scale+16:(end-top)*scale+10)+"px";
+          bridge.style.height=(gap>0?Math.max(1,gap*scale):12)+"px";
           events.appendChild(bridge);
         }
       }
