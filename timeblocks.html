@@ -1,14 +1,108 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8">
+<html lang="en">
+<head>
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#1A2029">
+<meta name="theme-color" content="#11151B">
 <title>Time Blocks | CA Foundation</title>
 <style>
-body{margin:0;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
-background:#1A2029;color:#e9f4fb;font-family:system-ui,-apple-system,sans-serif;text-align:center;padding:24px}
-.i{font-size:56px}h1{margin:0}p{color:#9fb3c4;margin:0}
-a{margin-top:18px;padding:12px 22px;border-radius:12px;background:#2f4a63;color:#e9f4fb;text-decoration:none;font-weight:600}
-</style></head><body>
-<div class="i">⏱️</div><h1>Time Blocks</h1><p>Coming soon. Replace this file with the real page.</p>
-<a href="index.html">&larr; Back to Home</a>
-</body></html>
+:root{color-scheme:dark;--bg:#11151b;--surface:#1a2029;--surface2:#232c38;--line:#354151;--ink:#e9f4fb;--muted:#9fb3c4;--accent:#7fd4ff;--green:#54d69a;--danger:#ff8c8c}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;padding:env(safe-area-inset-top) 16px env(safe-area-inset-bottom)}
+a{color:var(--accent)}.wrap{max-width:760px;margin:0 auto}.top{padding:18px 0 10px}.back{display:inline-block;margin-bottom:12px;text-decoration:none}.heading{display:flex;align-items:center;gap:12px}.heading .icon{font-size:32px}.heading h1{font-size:24px;margin:0}.heading p{margin:2px 0 0;color:var(--muted);font-size:14px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;margin:14px 0}.panel h2{font-size:18px;margin:0 0 12px}.datebar{display:flex;align-items:center;justify-content:space-between;gap:8px}.datebar button{font-size:20px;padding:7px 14px}.datebar input{width:min(220px,62%);text-align:center;font-weight:650}.today-label{color:var(--muted);font-size:13px;text-align:center;margin-top:5px}
+button,input,select{font:inherit}button,.button{border:0;border-radius:10px;padding:10px 14px;background:#2f4a63;color:var(--ink);font-weight:650;cursor:pointer}button:hover,.button:hover{filter:brightness(1.13)}button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}input[type="text"],input[type="date"],input[type="time"],select{width:100%;min-height:44px;background:#111720;color:var(--ink);border:1px solid var(--line);border-radius:9px;padding:9px 11px}label.field{display:block;font-weight:600;font-size:14px;margin:12px 0 5px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}.when{margin-top:5px}.days{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}.day-choice{position:relative}.day-choice input{position:absolute;opacity:0;width:1px;height:1px}.day-choice span{display:inline-flex;min-width:43px;min-height:40px;align-items:center;justify-content:center;padding:6px 9px;border:1px solid var(--line);border-radius:10px;color:var(--muted);cursor:pointer}.day-choice input:checked+span{background:#263f53;border-color:var(--accent);color:var(--ink)}.day-choice input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}.form-actions{display:flex;gap:8px;margin-top:16px}.primary{background:#17658a}.secondary{background:#354151}.danger{background:#623b42;color:#ffd9d9}.hint{font-size:13px;color:var(--muted);margin:7px 0 0}.error{color:#ffaaaa;min-height:20px;margin:8px 0 0;font-size:14px}
+.timeline-title{display:flex;justify-content:space-between;align-items:baseline;gap:10px}.timeline-title h2{margin-bottom:0}.timeline-title small{color:var(--muted)}.timeline{position:relative;margin-top:14px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface2)}.hours{position:relative;height:1728px;background:repeating-linear-gradient(to bottom,transparent 0,transparent 71px,rgba(170,190,210,.16) 71px,rgba(170,190,210,.16) 72px)}.hour{position:absolute;left:0;right:0;height:1px;border-top:1px solid rgba(170,190,210,.2)}.hour span{position:absolute;left:0;top:-10px;width:57px;text-align:center;padding:0 3px;background:var(--surface2);color:var(--muted);font-size:11px}.hour::after{content:"";position:absolute;left:57px;right:0;top:0;border-top:1px solid rgba(170,190,210,.13)}.blocks-layer{position:absolute;inset:0 0 0 62px}.timeblock{position:absolute;left:7px;right:7px;min-height:36px;border:1px solid #6ab6d5;border-left:5px solid var(--accent);border-radius:8px;background:#254257eF;padding:4px 8px;overflow:hidden;display:flex;align-items:center;gap:8px}.timeblock.done{border-color:var(--green);border-left-color:var(--green);background:#1e463c}.complete{flex:0 0 29px;width:29px;height:29px;padding:0;border:1px solid #9fb3c4;border-radius:8px;background:#111720;color:var(--green);font-size:18px;line-height:1}.block-text{min-width:0}.block-name{font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.block-time{font-size:11px;color:#d1e4ef;white-space:nowrap}.timeblock.done .block-name{text-decoration:line-through;color:#b5d7c7}.empty{padding:18px;text-align:center;color:var(--muted)}.block-list{display:grid;gap:9px;margin-top:14px}.list-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 12px;background:#111720;border:1px solid var(--line);border-radius:10px}.list-item strong{display:block}.list-item small{display:block;color:var(--muted);margin-top:2px}.list-actions{display:flex;gap:6px;flex-shrink:0}.list-actions button{padding:7px 9px;font-size:13px}.footer-note{text-align:center;color:var(--muted);font-size:12px;padding:4px 8px 24px}
+@media(max-width:480px){body{padding-left:12px;padding-right:12px}.panel{padding:13px}.heading h1{font-size:21px}.form-grid{grid-template-columns:1fr 1fr;gap:0 9px}.timeblock{left:4px;right:4px;padding:3px 5px;gap:5px}.block-name{font-size:12px}.block-time{font-size:10px}.list-item{align-items:flex-start}.list-actions{flex-direction:column}.hours{height:1728px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="back" href="index.html">← Home</a>
+    <div class="heading"><span class="icon" aria-hidden="true">⏱️</span><div><h1>Time Blocks</h1><p>Plan and check off your day</p></div></div>
+  </header>
+
+  <section class="panel" aria-label="Choose date">
+    <div class="datebar"><button type="button" id="previous" aria-label="Previous day">‹</button><input id="view-date" type="date" aria-label="Show schedule for date"><button type="button" id="next" aria-label="Next day">›</button></div>
+    <div class="today-label" id="date-label"></div>
+  </section>
+
+  <section class="panel" id="editor-panel">
+    <h2 id="form-title">＋ Create a time block</h2>
+    <form id="block-form">
+      <label class="field" for="block-name">What are you doing?</label><input id="block-name" type="text" maxlength="60" placeholder="e.g. Accounting revision" required>
+      <div class="form-grid">
+        <div><label class="field" for="start-time">Start time</label><input id="start-time" type="time" value="09:00" required></div>
+        <div><label class="field" for="end-time">End time</label><input id="end-time" type="time" value="10:00" required></div>
+      </div>
+      <label class="field" for="repeat">Show this block</label>
+      <select id="repeat"><option value="once">On one specific date</option><option value="daily">Every day</option><option value="weekdays">On selected days of the week</option></select>
+      <div class="when" id="once-date-wrap"><label class="field" for="once-date">Date</label><input id="once-date" type="date"></div>
+      <div class="when" id="weekdays-wrap" hidden><span class="field">Choose days</span><div class="days" id="weekday-choices"></div></div>
+      <p class="hint">Blocks are shown on the date you select above. Each block is a one-time event or repeats on the days you choose.</p>
+      <div class="form-actions"><button class="primary" id="save-button" type="submit">Add time block</button><button class="secondary" id="cancel-edit" type="button" hidden>Cancel edit</button></div>
+      <p class="error" id="form-error" role="alert"></p>
+    </form>
+  </section>
+
+  <section class="panel" aria-label="Daily timeline">
+    <div class="timeline-title"><h2 id="schedule-heading">Your schedule</h2><small id="block-count"></small></div>
+    <div class="timeline"><div class="hours" id="hours"><div class="blocks-layer" id="blocks-layer"></div></div></div>
+    <div class="block-list" id="block-list"></div>
+    <p class="hint">Tap the check mark to complete a block for this date. Your schedule and check marks are saved on this device.</p>
+  </section>
+  <p class="footer-note">Time blocks are stored locally in this browser.</p>
+</div>
+<script>
+(function(){
+  "use strict";
+  var STORAGE_KEY="ca-checklist-timeblocks-v1";
+  var DAYS=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  var fullDays=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+  var blocks=[],checks={},editingId=null;
+  try{var saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||"{}");blocks=Array.isArray(saved.blocks)?saved.blocks:[];checks=saved.checks&&typeof saved.checks==="object"?saved.checks:{};}catch(e){blocks=[];checks={};}
+  function localDate(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+  function dateFrom(value){return new Date(value+"T12:00:00");}
+  function save(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify({blocks:blocks,checks:checks}));}catch(e){document.getElementById("form-error").textContent="Could not save. Please check available browser storage.";}}
+  function el(id){return document.getElementById(id);}
+  var viewDate=el("view-date");viewDate.value=localDate(new Date());el("once-date").value=viewDate.value;
+  DAYS.forEach(function(day,i){var label=document.createElement("label");label.className="day-choice";label.innerHTML='<input type="checkbox" value="'+i+'"><span>'+day+'</span>';el("weekday-choices").appendChild(label);});
+  function minute(time){var p=time.split(":");return Number(p[0])*60+Number(p[1]);}
+  function applies(block,date){if(block.repeat==="daily")return true;if(block.repeat==="weekdays")return Array.isArray(block.days)&&block.days.indexOf(dateFrom(date).getDay())!==-1;return block.date===date;}
+  function daysFor(block){if(block.repeat==="daily")return [0,1,2,3,4,5,6];if(block.repeat==="weekdays")return block.days||[];return [dateFrom(block.date).getDay()];}
+  function scheduleIntersects(a,b){if(a.repeat==="once"&&b.repeat==="once")return a.date===b.date;if(a.repeat==="once")return applies(b,a.date);if(b.repeat==="once")return applies(a,b.date);return daysFor(a).some(function(d){return daysFor(b).indexOf(d)!==-1;});}
+  function describeSchedule(block){if(block.repeat==="daily")return "Every day";if(block.repeat==="weekdays")return (block.days||[]).map(function(d){return DAYS[d];}).join(", ");return "Once · "+dateFrom(block.date).toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric",year:"numeric"});}
+  function clock(m){var h=Math.floor(m/60),mins=m%60,ampm=h>=12?"PM":"AM",shown=h%12||12;return shown+":"+String(mins).padStart(2,"0")+" "+ampm;}
+  function safe(text){var d=document.createElement("div");d.textContent=text;return d.innerHTML;}
+  function updateDateLabel(){var d=dateFrom(viewDate.value);el("date-label").textContent=d.toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric",year:"numeric"});el("schedule-heading").textContent="Schedule · "+d.toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"});}
+  function toggleCheck(id,date){var key=date+"|"+id;if(checks[key])delete checks[key];else checks[key]=true;save();render();}
+  function render(){
+    var date=viewDate.value||localDate(new Date()),todayBlocks=blocks.filter(function(b){return applies(b,date);}).sort(function(a,b){return minute(a.start)-minute(b.start);});
+    updateDateLabel();el("block-count").textContent=todayBlocks.length+(todayBlocks.length===1?" block":" blocks");
+    var layer=el("blocks-layer");layer.innerHTML="";
+    for(var h=0;h<24;h++){var line=document.createElement("div");line.className="hour";line.style.top=(h*72)+"px";line.innerHTML="<span>"+String(h).padStart(2,"0")+":00</span>";el("hours").insertBefore(line,layer);}
+    todayBlocks.forEach(function(b){var start=minute(b.start),end=minute(b.end),done=!!checks[date+"|"+b.id];var item=document.createElement("div");item.className="timeblock"+(done?" done":"");item.style.top=(start*1.2)+"px";item.style.height=((end-start)*1.2)+"px";item.innerHTML='<button class="complete" type="button" aria-label="'+(done?"Mark "+safe(b.name)+" incomplete":"Complete "+safe(b.name))+'" aria-pressed="'+done+'">'+(done?"✔":"")+'</button><div class="block-text"><div class="block-name">'+safe(b.name)+'</div><div class="block-time">'+clock(start)+" – "+clock(end)+'</div></div>';item.querySelector(".complete").addEventListener("click",function(){toggleCheck(b.id,date);});layer.appendChild(item);});
+    var list=el("block-list");list.innerHTML="";
+    if(!todayBlocks.length){list.innerHTML='<div class="empty">No time blocks for this date yet. Add one above to get started.</div>';return;}
+    todayBlocks.forEach(function(b){var row=document.createElement("div");row.className="list-item";row.innerHTML='<div><strong>'+safe(b.name)+'</strong><small>'+clock(minute(b.start))+" – "+clock(minute(b.end))+" · "+safe(describeSchedule(b))+'</small></div><div class="list-actions"><button type="button" class="secondary edit">Edit</button><button type="button" class="danger delete">Delete</button></div>';row.querySelector(".edit").addEventListener("click",function(){beginEdit(b);});row.querySelector(".delete").addEventListener("click",function(){removeBlock(b);});list.appendChild(row);});
+  }
+  function showScheduleFields(){var repeat=el("repeat").value;el("once-date-wrap").hidden=repeat!=="once";el("weekdays-wrap").hidden=repeat!=="weekdays";}
+  el("repeat").addEventListener("change",showScheduleFields);
+  function resetForm(){el("block-form").reset();el("start-time").value="09:00";el("end-time").value="10:00";el("repeat").value="once";el("once-date").value=viewDate.value;el("form-title").textContent="＋ Create a time block";el("save-button").textContent="Add time block";el("cancel-edit").hidden=true;el("form-error").textContent="";editingId=null;showScheduleFields();}
+  function beginEdit(b){editingId=b.id;el("block-name").value=b.name;el("start-time").value=b.start;el("end-time").value=b.end;el("repeat").value=b.repeat;el("once-date").value=b.date||viewDate.value;Array.from(el("weekday-choices").querySelectorAll("input")).forEach(function(input){input.checked=(b.days||[]).indexOf(Number(input.value))!==-1;});el("form-title").textContent="Edit time block";el("save-button").textContent="Save changes";el("cancel-edit").hidden=false;el("form-error").textContent="";showScheduleFields();el("editor-panel").scrollIntoView({behavior:"smooth",block:"start"});}
+  function removeBlock(b){if(!window.confirm('Delete the time block “'+b.name+'” and its saved check marks?'))return;blocks=blocks.filter(function(item){return item.id!==b.id;});Object.keys(checks).forEach(function(key){if(key.endsWith("|"+b.id))delete checks[key];});save();if(editingId===b.id)resetForm();render();}
+  el("cancel-edit").addEventListener("click",resetForm);
+  el("block-form").addEventListener("submit",function(event){event.preventDefault();var name=el("block-name").value.trim(),start=el("start-time").value,end=el("end-time").value,repeat=el("repeat").value;var error=el("form-error");error.textContent="";
+    if(!name){error.textContent="Please enter a name for this block.";return;}if(!start||!end||minute(end)<=minute(start)){error.textContent="End time must be later than start time on the same day.";return;}if(minute(end)-minute(start)<30){error.textContent="Please make each block at least 30 minutes long.";return;}
+    var block={id:editingId||("tb-"+Date.now()+"-"+Math.random().toString(36).slice(2,8)),name:name,start:start,end:end,repeat:repeat,date:repeat==="once"?el("once-date").value:"",days:[]};
+    if(repeat==="once"&&!block.date){error.textContent="Please choose the date for this block.";return;}if(repeat==="weekdays"){block.days=Array.from(el("weekday-choices").querySelectorAll("input:checked")).map(function(input){return Number(input.value);});if(!block.days.length){error.textContent="Choose at least one day of the week.";return;}}
+    var collision=blocks.some(function(other){if(other.id===editingId)return false;if(!scheduleIntersects(block,other))return false;return minute(block.start)<minute(other.end)&&minute(other.start)<minute(block.end);});if(collision){error.textContent="That time overlaps another block on at least one of the selected days. Please choose another time.";return;}
+    if(editingId){blocks=blocks.map(function(old){return old.id===editingId?block:old;});}else blocks.push(block);save();if(repeat==="once")viewDate.value=block.date;resetForm();render();
+  });
+  function moveDate(amount){var d=dateFrom(viewDate.value);d.setDate(d.getDate()+amount);viewDate.value=localDate(d);render();}
+  el("previous").addEventListener("click",function(){moveDate(-1);});el("next").addEventListener("click",function(){moveDate(1);});viewDate.addEventListener("change",render);
+  render();showScheduleFields();
+})();
+</script>
+</body>
+</html>
