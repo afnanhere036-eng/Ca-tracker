@@ -1,12 +1,12 @@
 // Offline cache for the CA Foundation checklist.
-// All paths are relative, so this works from a GitHub Pages subfolder too.
-// Bump the version whenever the cached app files change.
-const CACHE = "ca-checklist-v2";
+// Bump the version whenever cached app files change.
+const CACHE = "ca-checklist-v3";
 const SHELL = [
   "./",
   "index.html",
   "track.html",
   "timeblocks.html",
+  "create-timeblock.html",
   "errorlogs.html",
   "syllabus.html",
   "questionbanks.html",
@@ -37,8 +37,7 @@ self.addEventListener("fetch", (event) => {
   if (req.method !== "GET") return;
   if (new URL(req.url).origin !== self.location.origin) return;
 
-  // Keep each page cached under its own URL. Never return one page's cached
-  // HTML for a different navigation: doing so made navigation lag by one click.
+  // Each HTML page is cached under its own URL; preserve query strings for date links.
   if (req.mode === "navigate") {
     event.respondWith((async () => {
       const cache = await caches.open(CACHE);
@@ -47,7 +46,7 @@ self.addEventListener("fetch", (event) => {
         if (res && res.ok) await cache.put(req, res.clone());
         return res;
       } catch (error) {
-        const cached = await cache.match(req);
+        const cached = await cache.match(req) || await cache.match(new URL(req.url).pathname);
         if (cached) return cached;
         throw error;
       }
@@ -55,7 +54,6 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Everything else (icons, manifest, etc.): saved copy first, network as backup.
   event.respondWith(
     caches.match(req).then((hit) => {
       if (hit) return hit;
